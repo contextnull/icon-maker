@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/central-icons",
+      "destination": "/central-icons.json"
+    }
+  ]
+}
