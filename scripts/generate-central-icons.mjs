@@ -81,6 +81,12 @@ async function fetchCentralIcons() {
 async function generate() {
   try {
     const payload = await fetchCentralIcons();
+    const previousPayload = await readExistingPayload();
+
+    if (previousPayload && hasSameIconData(previousPayload, payload)) {
+      payload.updatedAt = previousPayload.updatedAt;
+    }
+
     await mkdir(dirname(OUTPUT_FILE), { recursive: true });
     await writeFile(OUTPUT_FILE, `${JSON.stringify(payload)}\n`, "utf8");
     console.log(
@@ -98,6 +104,22 @@ async function generate() {
       throw error;
     }
   }
+}
+
+async function readExistingPayload() {
+  try {
+    return JSON.parse(await readFile(OUTPUT_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function hasSameIconData(previousPayload, nextPayload) {
+  return (
+    JSON.stringify(previousPayload.icons) === JSON.stringify(nextPayload.icons) &&
+    JSON.stringify(previousPayload.categories) === JSON.stringify(nextPayload.categories) &&
+    previousPayload.source === nextPayload.source
+  );
 }
 
 await generate();
