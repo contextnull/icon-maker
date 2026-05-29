@@ -823,6 +823,13 @@ export function App() {
 
     try {
       const response = await fetch("/api/central-icons");
+      const contentType = response.headers.get("content-type") ?? "";
+
+      if (!contentType.includes("application/json")) {
+        const message = await response.text();
+        throw new Error(message.trim() || `接口返回了非 JSON 响应：${response.status}`);
+      }
+
       const payload = (await response.json()) as IconsResponse | { error?: string };
 
       if (!response.ok || !("icons" in payload)) {
