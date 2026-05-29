@@ -822,7 +822,7 @@ export function App() {
     setError("");
 
     try {
-      const response = await fetch("/api/central-icons");
+      const response = await fetch("/central-icons.json");
       const contentType = response.headers.get("content-type") ?? "";
 
       if (!contentType.includes("application/json")) {
